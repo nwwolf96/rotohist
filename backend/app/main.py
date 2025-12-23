@@ -1,15 +1,23 @@
 from fastapi import FastAPI
+from app.database import SessionLocal
+from app.models import User
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import users
 
 app = FastAPI()
 
-# Allow Next.js frontend to call API
+# Allow requests from your frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000"],  # Next.js dev server
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(users.router, prefix="/api/users")
+@app.get("/api/users")
+def get_users():
+    db = SessionLocal()
+    users = db.query(User).all()
+    db.close()
+    return users
+
