@@ -5,7 +5,7 @@ import sys
 from sqlalchemy.orm import Session
 from app.common.constants import RawPlayerRow
 from app.common.enums import Handedness
-from app.api.create_player import create_player  
+from app.api.player import create_player  
 
 from app.database import SessionLocal
 

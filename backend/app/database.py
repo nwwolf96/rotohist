@@ -12,7 +12,4 @@ print("Database engine using:", DATABASE_URL)  # debug
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-from app.models import Player
-# Create all tables
-Base.metadata.create_all(bind=engine)
 

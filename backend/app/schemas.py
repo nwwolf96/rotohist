@@ -1,12 +1,13 @@
 from pydantic import BaseModel
+from app.common.enums import Handedness
 
-# This is what your API will send to clients
-class UserSchema(BaseModel):
-    id: int
-    name: str
+class PlayerCreate(BaseModel):
+    pid: str
+    first: str
+    last: str
+    bHand: Handedness
+    tHand: Handedness
 
+class PlayerOut(PlayerCreate):
     class Config:
-        orm_mode = True  # Important: allows SQLAlchemy models to be converted to Pydantic
-
-class UserCreate(BaseModel):
-    name: str
+        from_attributes = True
