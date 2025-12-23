@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 import os
 from dotenv import load_dotenv
+from app.base import Base
 
 load_dotenv()  # Load .env first
 
@@ -10,5 +11,8 @@ print("Database engine using:", DATABASE_URL)  # debug
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
+
+from app.models import Player
+# Create all tables
+Base.metadata.create_all(bind=engine)
 

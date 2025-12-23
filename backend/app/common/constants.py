@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Optional
-from enums import Team, Position
+from app.common.enums import Team, Position
 
 # ---- Core Data Classes ----
 
