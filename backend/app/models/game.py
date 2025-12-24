@@ -22,8 +22,15 @@ class Game(Base):
     visSp = Column(String, nullable=True)
 
     # relationships
-    pitcher_stats = relationship(
+    pitcher_daily_stats = relationship(
         "PitcherDailyStats",
+        back_populates="game",
+        cascade="all, delete-orphan",
+    )
+
+    # relationships
+    batter_daily_stats = relationship(
+        "BatterDailyStats",
         back_populates="game",
         cascade="all, delete-orphan",
     )

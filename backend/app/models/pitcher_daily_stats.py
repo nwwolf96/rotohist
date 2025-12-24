@@ -59,8 +59,8 @@ class PitcherDailyStats(Base):
     visHome = Column(String, nullable=False)
 
     # relationships
-    game = relationship("Game", back_populates="pitcher_stats")
-    player = relationship("Player", back_populates="pitcher_stats")
+    game = relationship("Game", back_populates="pitcher_daily_stats")
+    player = relationship("Player", back_populates="pitcher_daily_stats")
 
     __table_args__ = (
         Index("ix_pitcher_game_player", "gameId", "playerId"),

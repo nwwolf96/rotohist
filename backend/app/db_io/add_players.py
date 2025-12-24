@@ -54,6 +54,7 @@ def process_csv(file_path: str):
             except Exception as e:
                 print(f"Error processing row {row.get('id')}: {e}")
                 db.rollback()  # reset transaction so we can continue
+                quit(1)
 
     db.close()
     print("CSV processing complete!")

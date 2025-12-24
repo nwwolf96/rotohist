@@ -12,8 +12,13 @@ class Player(Base):
     bHand = Column(Enum(Handedness), nullable=False)
     tHand = Column(Enum(Handedness), nullable=False)
 
-    pitcher_stats = relationship(
+    pitcher_daily_stats = relationship(
         "PitcherDailyStats",
+        back_populates="player",
+        cascade="all, delete-orphan",
+    )
+    batter_daily_stats = relationship(
+        "BatterDailyStats",
         back_populates="player",
         cascade="all, delete-orphan",
     )

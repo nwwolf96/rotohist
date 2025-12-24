@@ -10,9 +10,11 @@ def main():
 
     db = SessionLocal()
     try:
+        print("Starting Import Games")
         process_games_min(db, games)
         starters = process_pitchers(db, pitchers)
         process_games_sp(db, starters)
+        print("Ending Import Games")
     finally:
         db.close()
 
