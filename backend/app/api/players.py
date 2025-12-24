@@ -4,7 +4,7 @@ from typing import List
 
 from app.dependencies import get_db
 from app.models import Player
-from app.schemas import PlayerCreate, PlayerOut
+from app.schemas.player import PlayerCreate, PlayerOut
 from app.api.player import create_player
 
 router = APIRouter(prefix="/players", tags=["players"])

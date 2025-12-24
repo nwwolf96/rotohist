@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
 from app.base import Base
@@ -12,4 +12,6 @@ print("Database engine using:", DATABASE_URL)  # debug
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+import app.models  
 
+Base.metadata.create_all(bind=engine)

@@ -1,6 +1,5 @@
-from sqlalchemy import Column, Integer, String
 from sqlalchemy import Column, String, Enum
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import relationship
 from app.base import Base
 from app.common.enums import Handedness
 
@@ -13,8 +12,8 @@ class Player(Base):
     bHand = Column(Enum(Handedness), nullable=False)
     tHand = Column(Enum(Handedness), nullable=False)
 
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True)
-
+    pitcher_stats = relationship(
+        "PitcherDailyStats",
+        back_populates="player",
+        cascade="all, delete-orphan",
+    )

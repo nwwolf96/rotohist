@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from ..database import SessionLocal
-from ..models import User
 
 router = APIRouter()
 
@@ -12,6 +11,3 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/")
-def read_users(db: Session = Depends(get_db)):
-    return db.query(User).all()

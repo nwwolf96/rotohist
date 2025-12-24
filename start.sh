@@ -21,6 +21,6 @@ docker run -d \
   postgres:15
 
 # Attach to the container's bash shell
-echo "Attaching to $CONTAINER_NAME..."
-docker exec -it $CONTAINER_NAME bash
+#echo "Attaching to $CONTAINER_NAME..."
+#docker exec -it $CONTAINER_NAME bash
 
