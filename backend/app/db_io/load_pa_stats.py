@@ -23,12 +23,11 @@ def init_player_stats(stats: dict, player_id: str, year: int, team: Team, b_orde
       "year": year,
       "team": team,
       "bOrder": b_order,
-      "gp": 1,
-      "lpa": 0, "lab": 0, "lr": 0, "lb1": 0, "lb2": 0, "lb3": 0,
+      "gp": 1, "r": 0,
+      "lpa": 0, "lab": 0, "lb1": 0, "lb2": 0, "lb3": 0,
       "lhr": 0, "lrbi": 0, "lbb": 0, "lso": 0, "lnump": 0,
-      "rpa": 0, "rab": 0, "rr": 0, "rb1": 0, "rb2": 0, "rb3": 0,
-      "rhr": 0, "rrbi": 0, "rbb": 0, "rso": 0, "rnump": 0,
-      "sb": 0, "cs": 0,
+      "lhbp": 0, "lsf": 0, "rpa": 0, "rab": 0, "rb1": 0, "rb2": 0,"rb3": 0, "rhr": 0, "rrbi": 0, "rbb": 0, "rso": 0, 
+      "rnump": 0, "rhbp": 0, "rsf": 0, "sb": 0, "cs": 0,
     }
 
 
@@ -89,10 +88,15 @@ def process_pa_csv(db: Session, file_path: str):
         init_player_stats(game_stats, batter, year, team, b_order)
         s = game_stats[batter]
 
+        # s["r"] += parse_int_or_zero(raw["runs"])
+        # print("game batter is " + curr_game + " " + batter + " " + raw["run1"])
+        for player in [raw["run1"], raw["run2"], raw["run3"], raw["run_b"]]:
+          if player in game_stats.keys():
+            game_stats[player]["r"] += 1
+          # s["r"] += 1
         if lookup_hand(raw["pithand"], Handedness.LEFT):
           s["lpa"] += parse_int_or_zero(raw["pa"])
           s["lab"] += parse_int_or_zero(raw["ab"])
-          s["lr"] += parse_int_or_zero(raw["runs"])
           s["lb1"] += parse_int_or_zero(raw["single"])
           s["lb2"] += parse_int_or_zero(raw["double"])
           s["lb3"] += parse_int_or_zero(raw["triple"])
@@ -101,10 +105,11 @@ def process_pa_csv(db: Session, file_path: str):
           s["lbb"] += parse_int_or_zero(raw["walk"])
           s["lso"] += parse_int_or_zero(raw["k_safe"])
           s["lnump"] += parse_int_or_zero(raw["nump"])
+          s["lhbp"] += parse_int_or_zero(raw["hbp"])
+          s["lsf"] += parse_int_or_zero(raw["sf"])
         else:
           s["rpa"] += parse_int_or_zero(raw["pa"])
           s["rab"] += parse_int_or_zero(raw["ab"])
-          s["rr"] += parse_int_or_zero(raw["runs"])
           s["rb1"] += parse_int_or_zero(raw["single"])
           s["rb2"] += parse_int_or_zero(raw["double"])
           s["rb3"] += parse_int_or_zero(raw["triple"])
@@ -113,17 +118,21 @@ def process_pa_csv(db: Session, file_path: str):
           s["rbb"] += parse_int_or_zero(raw["walk"])
           s["rso"] += parse_int_or_zero(raw["k_safe"])
           s["rnump"] += parse_int_or_zero(raw["nump"])
+          s["rhbp"] += parse_int_or_zero(raw["hbp"])
+          s["rsf"] += parse_int_or_zero(raw["sf"])
 
-        s["sb"] += (
-          parse_int_or_zero(raw["sb2"])
-          + parse_int_or_zero(raw["sb3"])
-          + parse_int_or_zero(raw["sbh"])
-        )
-        s["cs"] += (
-          parse_int_or_zero(raw["cs2"])
-          + parse_int_or_zero(raw["cs3"])
-          + parse_int_or_zero(raw["csh"])
-        )
+        stealer = raw["br1_pre"]
+        if stealer in game_stats.keys():
+          game_stats[stealer]["sb"] += parse_int_or_zero(raw["sb2"])
+          game_stats[stealer]["cs"] += parse_int_or_zero(raw["cs2"])
+        stealer = raw["br2_pre"]
+        if stealer in game_stats.keys():
+          game_stats[stealer]["sb"] += parse_int_or_zero(raw["sb3"])
+          game_stats[stealer]["cs"] += parse_int_or_zero(raw["cs3"])
+        stealer = raw["br3_pre"]
+        if stealer in game_stats.keys():
+          game_stats[stealer]["sb"] += parse_int_or_zero(raw["sbh"])
+          game_stats[stealer]["cs"] += parse_int_or_zero(raw["csh"])
 
         ab = PlayerAbAdv(
           batterId=batter,

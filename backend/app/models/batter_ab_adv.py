@@ -26,6 +26,9 @@ class PlayerAbAdv(Base):
     hr = Column(Integer)
     rbi = Column(Integer)
     bb = Column(Integer)
+    nump = Column(Integer)
+    hbp = Column(Integer)
+    sf = Column(Integer)
 
     sb2 = Column(Integer)
     sb3 = Column(Integer)
@@ -34,10 +37,7 @@ class PlayerAbAdv(Base):
     cs3 = Column(Integer)
     csh = Column(Integer)
 
-    nump = Column(Integer)
-    hbp = Column(Integer)
     sh = Column(Integer)
-    sf = Column(Integer)
     iw = Column(Integer)
     xi = Column(Integer)
     bip = Column(Integer)

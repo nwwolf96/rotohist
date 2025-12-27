@@ -17,9 +17,9 @@ class BatterDailyStats(Base):
 
     bOrder = Column(Integer)
     gp = Column(Integer)
+    r = Column(Integer)
     lpa = Column(Integer)
     lab = Column(Integer)
-    lr = Column(Integer)
     lb1 = Column(Integer)
     lb2 = Column(Integer)
     lb3 = Column(Integer)
@@ -28,10 +28,11 @@ class BatterDailyStats(Base):
     lbb = Column(Integer)
     lso = Column(Integer)
     lnump = Column(Integer)
+    lhbp = Column(Integer)
+    lsf = Column(Integer)
 
     rpa = Column(Integer)
     rab = Column(Integer)
-    rr = Column(Integer)
     rb1 = Column(Integer)
     rb2 = Column(Integer)
     rb3 = Column(Integer)
@@ -40,6 +41,8 @@ class BatterDailyStats(Base):
     rbb = Column(Integer)
     rso = Column(Integer)
     rnump = Column(Integer)
+    rhbp = Column(Integer)
+    rsf = Column(Integer)
 
     sb = Column(Integer)
     cs = Column(Integer)
