@@ -57,6 +57,7 @@ def query_bs_db(db: Session, name: str, startDate: str = None, endDate: str = No
             continue
 
         if e.batterId == player.pid:
+            print("pid and gid are " + player.pid + " " + e.gameId)
             hr += e.hr
             rbi += e.rbi
             h += e.b1 + e.b2 + e.b3 + e.hr

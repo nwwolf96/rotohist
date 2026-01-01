@@ -17,6 +17,8 @@ class BatterDailyStats(Base):
 
     bOrder = Column(Integer)
     gp = Column(Integer)
+    gs = Column(Integer)
+    gpdh = Column(Integer)
     r = Column(Integer)
     lpa = Column(Integer)
     lab = Column(Integer)
@@ -46,6 +48,7 @@ class BatterDailyStats(Base):
 
     sb = Column(Integer)
     cs = Column(Integer)
+    pos = Column(String)
 
     game = relationship("Game")
 

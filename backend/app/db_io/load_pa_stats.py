@@ -2,6 +2,7 @@ import csv
 import sys
 from app.database import SessionLocal
 from sqlalchemy.orm import Session
+from sqlalchemy.inspection import inspect
 from app.models import BatterDailyStats, PlayerAbAdv
 from app.common.constants import Team
 from app.common.enums import Handedness
@@ -23,15 +24,18 @@ def init_player_stats(stats: dict, player_id: str, year: int, team: Team, b_orde
       "year": year,
       "team": team,
       "bOrder": b_order,
-      "gp": 1, "r": 0,
+      "gp": 1, "gs": 0, "gpdh": 0, "r": 0,
       "lpa": 0, "lab": 0, "lb1": 0, "lb2": 0, "lb3": 0,
       "lhr": 0, "lrbi": 0, "lbb": 0, "lso": 0, "lnump": 0,
       "lhbp": 0, "lsf": 0, "rpa": 0, "rab": 0, "rb1": 0, "rb2": 0,"rb3": 0, "rhr": 0, "rrbi": 0, "rbb": 0, "rso": 0, 
-      "rnump": 0, "rhbp": 0, "rsf": 0, "sb": 0, "cs": 0,
+      "rnump": 0, "rhbp": 0, "rsf": 0, "sb": 0, "cs": 0, "pos": "",
     }
 
-
 def flush_daily_stats(db: Session, game_id: str, stats: dict):
+  # get valid column names from the SQLAlchemy mapper
+  mapper = inspect(BatterDailyStats)
+  valid_cols = {col.key for col in mapper.attrs}
+
   for player_id, s in stats.items():
     record = (
       db.query(BatterDailyStats)
@@ -44,17 +48,19 @@ def flush_daily_stats(db: Session, game_id: str, stats: dict):
 
     if record:
       for k, v in s.items():
-        setattr(record, k, v)
+        if k in valid_cols:
+          setattr(record, k, v)
     else:
+      # filter kwargs to only valid columns
+      filtered = {k: v for k, v in s.items() if k in valid_cols}
       record = BatterDailyStats(
         playerId=player_id,
         gameId=game_id,
-        **s,
+        **filtered,
       )
       db.add(record)
 
   db.commit()
-
 
 def process_pa_csv(db: Session, file_path: str):
   print("processing 2024 plays csv")
@@ -103,7 +109,7 @@ def process_pa_csv(db: Session, file_path: str):
           s["lhr"] += parse_int_or_zero(raw["hr"])
           s["lrbi"] += parse_int_or_zero(raw["rbi"])
           s["lbb"] += parse_int_or_zero(raw["walk"])
-          s["lso"] += parse_int_or_zero(raw["k_safe"])
+          s["lso"] += parse_int_or_zero(raw["k"])
           s["lnump"] += parse_int_or_zero(raw["nump"])
           s["lhbp"] += parse_int_or_zero(raw["hbp"])
           s["lsf"] += parse_int_or_zero(raw["sf"])
@@ -116,7 +122,7 @@ def process_pa_csv(db: Session, file_path: str):
           s["rhr"] += parse_int_or_zero(raw["hr"])
           s["rrbi"] += parse_int_or_zero(raw["rbi"])
           s["rbb"] += parse_int_or_zero(raw["walk"])
-          s["rso"] += parse_int_or_zero(raw["k_safe"])
+          s["rso"] += parse_int_or_zero(raw["k"])
           s["rnump"] += parse_int_or_zero(raw["nump"])
           s["rhbp"] += parse_int_or_zero(raw["hbp"])
           s["rsf"] += parse_int_or_zero(raw["sf"])
@@ -194,7 +200,7 @@ def process_pa_csv(db: Session, file_path: str):
         db.commit()
 
       except Exception as e:
-        print("Error processing row:", raw, e)
+        print("Error processing row XX:", raw, e)
         quit(1)
 
   if curr_game and game_stats:
