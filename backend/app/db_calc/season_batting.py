@@ -128,8 +128,8 @@ def loadBatterStatsFromDb(db, player_name, min_qualify):
     tmp_team = ""
     start_stats = PlayerStarts()
     for x in filter_result:
-        team = x.gameId[0:2]
-        tmp_hand = x.player.bHand
+        team = x.gameId[0:3]
+        tmp_hand = str(x.player.bHand).split("Handedness.")[1]
         if "2024" in x.gameId:
             tmp_team = team
         # if season_commons.args.month != 0 and x.statDate.split("/")[0] != str(season_commons.args.month):
@@ -464,105 +464,106 @@ def fill_buckets(player_ats_list, team_size, pos_ct, pos_order):
             pos_ct[pos] -= 1
     return player_names
 
-def load_to_db(all_player_ats):
-    for _,ats in all_player_ats.items():
-        filter_result = 0
-        try:
-            filter_result = SeasonBatting.objects.filter(name=ats.name,h=ats.h).update(
-                team=ats.team,
-                gp=ats.gp,
-                bo=ats.batting_order,
-                l_r=ats.hand,
-                pa=ats.pa,
-                ab=ats.ab,
-                h=ats.h,
-                r=ats.r,
-                hr=ats.hr,
-                rbi=ats.rbi,
-                bb=ats.bb,
-                sb=ats.sb,
-                cs=ats.cs,
-                avg=ats.avg,
-                pos=ats.pos,
-                pa_gp=ats.start_stats.pa_gp,
-                sta=ats.start_stats.start_rate,
-                sit=ats.start_stats.sit_rate,
-                lSta=ats.start_stats.start_rate_v_left,
-                lSit=ats.start_stats.sit_rate_v_left,
-                rSta=ats.start_stats.start_rate_v_right,
-                rSit=ats.start_stats.sit_rate_v_right,
-                r_z=ats.zscores.r,
-                hr_z=ats.zscores.hr,
-                rbi_z=ats.zscores.rbi,
-                sb_z=ats.zscores.sb,
-                avg_z=ats.zscores.avg,
-                prv=ats.zscores.total
-            )
-            # print("updated stats for " + ats.name)
-            # print("filter status is " + str(filter_result))
-        except:
-            SeasonBatting.objects.create(
-                name=ats.name,
-                team=ats.team,
-                gp=ats.gp,
-                bo=ats.batting_order,
-                l_r=ats.hand,
-                pa=ats.pa,
-                ab=ats.ab,
-                h=ats.h,
-                r=ats.r,
-                hr=ats.hr,
-                rbi=ats.rbi,
-                bb=ats.bb,
-                sb=ats.sb,
-                cs=ats.cs,
-                avg=ats.avg,
-                pos=ats.pos,
-                pa_gp=ats.start_stats.pa_gp,
-                sta=ats.start_stats.start_rate,
-                sit=ats.start_stats.sit_rate,
-                lSta=ats.start_stats.start_rate_v_left,
-                lSit=ats.start_stats.sit_rate_v_left,
-                rSta=ats.start_stats.start_rate_v_right,
-                rSit=ats.start_stats.sit_rate_v_right,
-                r_z=ats.zscores.r,
-                hr_z=ats.zscores.hr,
-                rbi_z=ats.zscores.rbi,
-                sb_z=ats.zscores.sb,
-                avg_z=ats.zscores.avg,
-                prv=ats.zscores.total
-            )
-            print("created player stats for " + ats.name)
-        if (filter_result == 0):
-            SeasonBatting.objects.create(
-                name=ats.name,
-                team=ats.team,
-                gp=ats.gp,
-                bo=ats.batting_order,
-                l_r=ats.hand,
-                pa=ats.pa,
-                ab=ats.ab,
-                h=ats.h,
-                r=ats.r,
-                hr=ats.hr,
-                rbi=ats.rbi,
-                bb=ats.bb,
-                sb=ats.sb,
-                cs=ats.cs,
-                avg=ats.avg,
-                pos=ats.pos,
-                pa_gp=ats.start_stats.pa_gp,
-                sta=ats.start_stats.start_rate,
-                sit=ats.start_stats.sit_rate,
-                lSta=ats.start_stats.start_rate_v_left,
-                lSit=ats.start_stats.sit_rate_v_left,
-                rSta=ats.start_stats.start_rate_v_right,
-                rSit=ats.start_stats.sit_rate_v_right,
-                r_z=ats.zscores.r,
-                hr_z=ats.zscores.hr,
-                rbi_z=ats.zscores.rbi,
-                sb_z=ats.zscores.sb,
-                avg_z=ats.zscores.avg,
-                prv=ats.zscores.total
-            )
-            print("created player stats for " + ats.name)
+#todo load to the database
+# def load_to_db(all_player_ats):
+#     for _,ats in all_player_ats.items():
+#         filter_result = 0
+#         try:
+#             filter_result = SeasonBatting.objects.filter(name=ats.name,h=ats.h).update(
+#                 team=ats.team,
+#                 gp=ats.gp,
+#                 bo=ats.batting_order,
+#                 l_r=ats.hand,
+#                 pa=ats.pa,
+#                 ab=ats.ab,
+#                 h=ats.h,
+#                 r=ats.r,
+#                 hr=ats.hr,
+#                 rbi=ats.rbi,
+#                 bb=ats.bb,
+#                 sb=ats.sb,
+#                 cs=ats.cs,
+#                 avg=ats.avg,
+#                 pos=ats.pos,
+#                 pa_gp=ats.start_stats.pa_gp,
+#                 sta=ats.start_stats.start_rate,
+#                 sit=ats.start_stats.sit_rate,
+#                 lSta=ats.start_stats.start_rate_v_left,
+#                 lSit=ats.start_stats.sit_rate_v_left,
+#                 rSta=ats.start_stats.start_rate_v_right,
+#                 rSit=ats.start_stats.sit_rate_v_right,
+#                 r_z=ats.zscores.r,
+#                 hr_z=ats.zscores.hr,
+#                 rbi_z=ats.zscores.rbi,
+#                 sb_z=ats.zscores.sb,
+#                 avg_z=ats.zscores.avg,
+#                 prv=ats.zscores.total
+#             )
+#             # print("updated stats for " + ats.name)
+#             # print("filter status is " + str(filter_result))
+#         except:
+#             SeasonBatting.objects.create(
+#                 name=ats.name,
+#                 team=ats.team,
+#                 gp=ats.gp,
+#                 bo=ats.batting_order,
+#                 l_r=ats.hand,
+#                 pa=ats.pa,
+#                 ab=ats.ab,
+#                 h=ats.h,
+#                 r=ats.r,
+#                 hr=ats.hr,
+#                 rbi=ats.rbi,
+#                 bb=ats.bb,
+#                 sb=ats.sb,
+#                 cs=ats.cs,
+#                 avg=ats.avg,
+#                 pos=ats.pos,
+#                 pa_gp=ats.start_stats.pa_gp,
+#                 sta=ats.start_stats.start_rate,
+#                 sit=ats.start_stats.sit_rate,
+#                 lSta=ats.start_stats.start_rate_v_left,
+#                 lSit=ats.start_stats.sit_rate_v_left,
+#                 rSta=ats.start_stats.start_rate_v_right,
+#                 rSit=ats.start_stats.sit_rate_v_right,
+#                 r_z=ats.zscores.r,
+#                 hr_z=ats.zscores.hr,
+#                 rbi_z=ats.zscores.rbi,
+#                 sb_z=ats.zscores.sb,
+#                 avg_z=ats.zscores.avg,
+#                 prv=ats.zscores.total
+#             )
+#             print("created player stats for " + ats.name)
+#         if (filter_result == 0):
+#             SeasonBatting.objects.create(
+#                 name=ats.name,
+#                 team=ats.team,
+#                 gp=ats.gp,
+#                 bo=ats.batting_order,
+#                 l_r=ats.hand,
+#                 pa=ats.pa,
+#                 ab=ats.ab,
+#                 h=ats.h,
+#                 r=ats.r,
+#                 hr=ats.hr,
+#                 rbi=ats.rbi,
+#                 bb=ats.bb,
+#                 sb=ats.sb,
+#                 cs=ats.cs,
+#                 avg=ats.avg,
+#                 pos=ats.pos,
+#                 pa_gp=ats.start_stats.pa_gp,
+#                 sta=ats.start_stats.start_rate,
+#                 sit=ats.start_stats.sit_rate,
+#                 lSta=ats.start_stats.start_rate_v_left,
+#                 lSit=ats.start_stats.sit_rate_v_left,
+#                 rSta=ats.start_stats.start_rate_v_right,
+#                 rSit=ats.start_stats.sit_rate_v_right,
+#                 r_z=ats.zscores.r,
+#                 hr_z=ats.zscores.hr,
+#                 rbi_z=ats.zscores.rbi,
+#                 sb_z=ats.zscores.sb,
+#                 avg_z=ats.zscores.avg,
+#                 prv=ats.zscores.total
+#             )
+#             print("created player stats for " + ats.name)
