@@ -3,7 +3,7 @@ import concurrent.futures
 from sqlalchemy import func
 
 from enum import Enum
-from app.models import BatterDailyStats, PitcherDailyStats
+from app.models import BatterDailyStats, PitcherDailyStats, Player
 
 MONTH_LIST = [31,28,31,30,31,30,31,31,30,31,30,31]
 
@@ -142,6 +142,9 @@ def load_names_from_year(db, startDate,endDate,type):
             all_names += [x.playerId]
     return all_names
 
+def lookup_id_to_name(db, id): 
+    player = db.query(Player).filter(Player.pid == id).first()
+    return player.first + " " + player.last 
 # load the player data for every player in the player file. Uses the func function to load every 
 # player from db. Returns a dictionary of the player name -> db lookup data
 def load_all_ats(db, people_list, min_qualify, func):
@@ -150,7 +153,7 @@ def load_all_ats(db, people_list, min_qualify, func):
     # splits the db loading for all players into 5 worker threads
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         for person in people_list:
-            # person = person.replace("\n","").replace("_"," ")
+            # person = person.replace("\n","").]eplace("_"," ")
             thread_contents[executor.submit(func, db, person, min_qualify)] = person
         for future in concurrent.futures.as_completed(thread_contents):
             person = thread_contents[future]

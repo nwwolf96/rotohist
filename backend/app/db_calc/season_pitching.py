@@ -40,8 +40,8 @@ pitching_header_zscores = [
     "S-Z",
     "ERA-Z",
     "WHIP-Z",
-    "PRV",
-    "PRV-A",
+    "Z-SUM",
+    "Z-SUM-A",
     "ACV"
 ]
 if season_commons.args.all or season_commons.args.zscores:
@@ -106,7 +106,14 @@ def loadPitcherStatsFromDb(db, player_name, min_qualify=3):
     tmp_hand = ""
     tmp_team = ""
     for x in filter_result:
-        tmp_team = x.player.team
+        team = x.player.team
+        teams = team.split(",")
+        tmp_team = ""
+        for team in teams: 
+            if tmp_team == "":
+                tmp_team += team
+            if team not in tmp_team:
+                tmp_team += ", " + team 
         tmp_hand = str(x.player.bHand).split("Handedness.")[1]
         curr_date = season_commons.dateToNumber(x.gameId[3:])
         if season_commons.dateToNumber(season_commons.args.to) < curr_date or season_commons.dateToNumber(season_commons.args.fro) > curr_date:
@@ -153,7 +160,10 @@ def loadPitcherStatsFromDb(db, player_name, min_qualify=3):
     if len(positions) == 0:
         positions += ["P"]
     for pos in positions:
-        sum_pats.pos += pos + ", "
+        if sum_pats.pos == "":
+            sum_pats.pos += pos
+            continue
+        sum_pats.pos += ", " + pos 
     return sum_pats
 
 def get_league_era_whip(player_list, all_pitcher_ats, ip_min=100):
@@ -221,7 +231,7 @@ def adjust_prvs(bucket_mins, totals, apply_to_all, dollar_per_unit):
         print("total units in sample is | " + str(pitcher_tv) + " | total dollars | " + str(total_money)+ " | dollars per unit " + str(total_money/(pitcher_tv+projected_batter_tv)))
     return float(total_money/(pitcher_tv+projected_batter_tv))
 
-def sample_players(player_list, all_pitcher_ats, league_era, league_whip, print_players=True, eval_prv=True, ip_min=100, roto_stats=None, apply_to_all=False, bucket_mins=None, dollar_per_unit=None, to_csv=False):
+def sample_players(player_list, all_pitcher_ats, league_era, league_whip, print_players=True, eval_prv=True, ip_min=100, roto_stats=None, apply_to_all=False, bucket_mins=None, dollar_per_unit=None, to_csv=False, db=None):
     totals = []
     w = []
     k = []
@@ -268,11 +278,13 @@ def sample_players(player_list, all_pitcher_ats, league_era, league_whip, print_
         )
         ct = 0
         for x in totals:
+            if db != None:
+                x[0] = season_commons.lookup_id_to_name(db, x[0])
             totals[ct] = [ct+1] + x
             ct += 1
         totals = [pitching_header_season] + totals
         if to_csv:
-            filename = "2023_auction_calc_pitcher.csv"
+            filename = "auction_calc_pitcher.csv"
             with open(filename, "w") as f:
                 f.write(",")
                 for row in totals:

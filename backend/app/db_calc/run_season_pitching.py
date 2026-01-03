@@ -66,4 +66,4 @@ roto_stats.whip.sd = whoas_sd
 
 _,_,_,_,_,bucket_mins, dollar_per_unit = sp.sample_players(player_list, all_pitcher_ats, float(league_era), float(league_whip), print_players=False, eval_prv=True, ip_min=int(ip_min), roto_stats=roto_stats)
 
-sp.sample_players(people, all_pitcher_ats, float(league_era), float(league_whip), print_players=True, eval_prv=True, ip_min=int(ip_min), roto_stats=roto_stats, apply_to_all=True, bucket_mins=bucket_mins, dollar_per_unit=dollar_per_unit, to_csv=True)
+sp.sample_players(people, all_pitcher_ats, float(league_era), float(league_whip), print_players=True, eval_prv=True, ip_min=int(ip_min), roto_stats=roto_stats, apply_to_all=True, bucket_mins=bucket_mins, dollar_per_unit=dollar_per_unit, to_csv=True, db=db)

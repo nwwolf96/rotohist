@@ -38,9 +38,9 @@ batting_header_zscores = [
     "RBI-Z",
     "SB-Z",
     "AVG-Z",
-    "PRV",
+    "Z-SUM",
     # "B-POS",
-    "PRV-A",
+    "Z-SUM-A",
     "Adj-Val",
     "ACV"
 ]
@@ -130,7 +130,13 @@ def loadBatterStatsFromDb(db, player_name, min_qualify):
     for x in filter_result:
         team = x.player.team
         tmp_hand = str(x.player.bHand).split("Handedness.")[1]
-        tmp_team = team
+        teams = team.split(",")
+        tmp_team = ""
+        for team in teams: 
+            if tmp_team == "":
+                tmp_team += team
+            if team not in tmp_team:
+                tmp_team += ", " + team 
         # if season_commons.args.month != 0 and x.statDate.split("/")[0] != str(season_commons.args.month):
         #     continue
         curr_date = season_commons.dateToNumber(x.gameId[3:])
@@ -166,10 +172,14 @@ def loadBatterStatsFromDb(db, player_name, min_qualify):
         sum_ats.sb += x.sb
         sum_ats.cs += x.cs
         order_mode += [x.bOrder]
-        if x.pos not in positions.keys():
-            positions[x.pos] = 1
-        else:
-            positions[x.pos] += 1
+        for pos in x.pos.split(", "):
+            # print("pos is " + pos)
+            if pos == "":
+                continue
+            if pos not in positions.keys():
+                positions[pos] = 1
+            else:
+                positions[pos] += 1
     if int(str(sum_ats.ab)) > 0:
         sum_ats.avg = round(float(sum_ats.h) / float(sum_ats.ab), 3)
 
@@ -181,11 +191,15 @@ def loadBatterStatsFromDb(db, player_name, min_qualify):
 
     for pos in positions:
         if positions[pos] >= min_qualify:
-            if pos == "PH" or pos == "TWP" or pos == "PR":
+            if pos == "PH" or pos == "PR":
                 continue
             if pos == "C":
                 pos = "CC"
-            sum_ats.pos += pos + ", "
+            if sum_ats.pos == "":
+                sum_ats.pos += pos
+                continue
+            sum_ats.pos += ", " + pos
+
     # print("positions: 'Pos': GP, | " + str(positions))
 
     if season_commons.args.startsit or season_commons.args.all:
@@ -313,7 +327,7 @@ def adjust_prvs(bucket_mins, totals, apply_to_all, dollar_per_unit):
         print("total units in sample is | " + str(batter_tv) + " | total dollars | " + str(total_money)+ " | dollars per unit " + str(total_money/(batter_tv+projected_pitcher_tv)))
     return float(total_money/(batter_tv+projected_pitcher_tv))
 
-def sample_players(player_list, all_player_ats, league_ba, print_players=True, eval_prv=True, ab_min=100, roto_stats=None, apply_to_all=False, bucket_mins=None, dollar_per_unit=None, to_csv=False, override=False):
+def sample_players(player_list, all_player_ats, league_ba, print_players=True, eval_prv=True, ab_min=100, roto_stats=None, apply_to_all=False, bucket_mins=None, dollar_per_unit=None, to_csv=False, override=False, db=None):
     totals = []
     abs = []
     hs = []
@@ -378,9 +392,9 @@ def sample_players(player_list, all_player_ats, league_ba, print_players=True, e
                 "RBI-Z",
                 "SB-Z",
                 "AVG-Z",
-                "PRV",
+                "Z-SUM",
                 # "B-POS",
-                "PRV-A",
+                "Z-SUM-A",
                 "Adj-Val",
                 "ACV"
             ]
@@ -399,12 +413,14 @@ def sample_players(player_list, all_player_ats, league_ba, print_players=True, e
             )
             ct = 0
             for x in totals:
+                if db != None:
+                    x[0] = season_commons.lookup_id_to_name(db, x[0])
                 totals[ct] = [ct+1] + x
                 ct += 1
             # batting_header_season= ["Rank"] + batting_header_season
             totals = [batting_header_season] + totals
         if to_csv:
-            filename = "2023_auction_calc_batter.csv"
+            filename = "auction_calc_batter.csv"
             with open(filename, "w") as f:
                 f.write(",")
                 for row in totals:

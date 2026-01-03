@@ -60,7 +60,7 @@ roto_stats.avg.sd = hoa_sd
 
 _,_,_,_,_,bucket_mins, dollar_per_unit = sb.sample_players(player_list, all_player_ats, league_ba, print_players=False, eval_prv=True, ab_min=int(ab_min), roto_stats=roto_stats)
 
-sb.sample_players(people, all_player_ats, league_ba, print_players=True, eval_prv=True, ab_min=int(ab_min), roto_stats=roto_stats, apply_to_all=True, bucket_mins=bucket_mins, dollar_per_unit=dollar_per_unit, to_csv=True)
+sb.sample_players(people, all_player_ats, league_ba, print_players=True, eval_prv=True, ab_min=int(ab_min), roto_stats=roto_stats, apply_to_all=True, bucket_mins=bucket_mins, dollar_per_unit=dollar_per_unit, to_csv=True, db=db)
 
 
 # load_to_db(all_player_ats)
