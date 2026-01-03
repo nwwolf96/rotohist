@@ -124,9 +124,9 @@ def load_names_from_year(db, startDate,endDate,type):
         endDate = endDate[1:]
     if(type == PlayerType.HITTER):
         filter_result = (
-            db.query(BatterDailyStats)
-            .filter(func.substr(BatterDailyStats.gameId, 4, 8) >= startDate)
-            .filter(func.substr(BatterDailyStats.gameId, 4, 8) <= endDate)
+            db.query(PitcherDailyStats)
+            .filter(func.substr(PitcherDailyStats.gameId, 4, 8) >= startDate)
+            .filter(func.substr(PitcherDailyStats.gameId, 4, 8) <= endDate)
             .all()
         )
     else:

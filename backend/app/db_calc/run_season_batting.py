@@ -28,7 +28,7 @@ db = SessionLocal()
 # TODO fix this... this is a bit of a hack, i need to change the db to store the date value that I calculated in commons
 if "10/" in sc.args.to:
     people = sc.get_names_from_file("files/2023_people/hitters_fmt.out")
-    all_player_ats = sc.load_all_ats(people, min_qualify, sb.loadBatterStatsFromDb)
+    all_player_ats = sc.load_all_ats(db, people, min_qualify, sb.loadBatterStatsFromDb)
 else:
     people = sc.load_names_from_year(db, sc.args.fro, sc.args.to, sc.PlayerType.HITTER)
     all_player_ats = sc.load_all_ats(db, people, min_qualify, sb.loadBatterStatsFromDb)

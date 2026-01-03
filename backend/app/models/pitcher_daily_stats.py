@@ -26,7 +26,7 @@ class PitcherDailyStats(Base):
     noOuts = Column(Integer, default=0)
     bf = Column(Integer, default=0)
 
-    singles = Column(Integer, default=0)
+    ha = Column(Integer, default=0)
     doubles = Column(Integer, default=0)
     triples = Column(Integer, default=0)
     hr = Column(Integer, default=0)

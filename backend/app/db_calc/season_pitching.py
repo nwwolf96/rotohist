@@ -1,9 +1,5 @@
-from statServer.wsgi import *
-from mlbApi.api_parsing.game_live_feed import *
-from mlbApi.api_parsing.schedule import *
-from mlbApi.constants import *
-from mlbApi.data_manipulation.lookups import *
-from serverApi.models import *
+from app.models import PitcherDailyStats
+from sqlalchemy import func
 from . import bucket_manager
 from . import season_commons 
 
@@ -102,43 +98,40 @@ def getArrayFromPats(pats):
     ret_val = [pats.name, pats.team, pats.hand, pats.pos, pats.ip, pats.gs, pats.gp, pats.ha, pats.r, pats.er, pats.hr, pats.bb, pats.k, pats.w, pats.l, pats.s, pats.hd, pats.bs, pats.era, pats.whip, pats.sb, pats.cs, pats.sbp] # TODO add these back in if care, pats.np, pats.strike, pats.ball]
     return ret_val
 
-def loadPitcherStatsFromDb(player_name, min_qualify=3):
-    filter_result = DailyPitchingStats.objects.filter(name=player_name).all()
+def loadPitcherStatsFromDb(db, player_name, min_qualify=3):
+    filter_result = db.query(PitcherDailyStats).filter(PitcherDailyStats.playerId == player_name)
     positions = []
     sum_pats = PitcherAt()
     ip_chunks = 0
     tmp_hand = ""
     tmp_team = ""
     for x in filter_result:
-        tmp_hand = x.hand
-        if "2024" in x.statDate:
-            tmp_team = x.team
-        curr_date = season_commons.dateToNumber(x.statDate)
+        team = x.gameId[0:3]
+        tmp_hand = str(x.player.bHand).split("Handedness.")[1]
+        if "2024" in x.gameId:
+            tmp_team = team
+        curr_date = season_commons.dateToNumber(x.gameId[3:])
         if season_commons.dateToNumber(season_commons.args.to) < curr_date or season_commons.dateToNumber(season_commons.args.fro) > curr_date:
             continue
         # Discard all star game
         if x.team == "AL" or x.team == "NL":
             continue
         sum_pats.gs += int(x.gs)
-        sum_pats.gp += int(x.gp)
-        sum_pats.ip += float(x.ip)
-        sum_pats.ha += int(x.h)
+        sum_pats.gp += 1
+        sum_pats.ip += float(x.outs/3)
+        sum_pats.ha += int(x.singles + x.doubles + x.triples + x.hr)
         sum_pats.r += int(x.r)
         sum_pats.er += int(x.er)
         sum_pats.hr += int(x.hr)
         sum_pats.bb += int(x.bb)
         sum_pats.k += int(x.k)
-        sum_pats.w += int(x.w)
-        sum_pats.l += int(x.l)
-        sum_pats.s += int(x.s)
-        sum_pats.hd += int(x.hd)
-        sum_pats.bs += int(x.bs)
-        sum_pats.np += int(x.np)
-        sum_pats.strike += int(x.strikes)
-        sum_pats.ball += int(x.balls)
+        sum_pats.w += int(x.win_p)
+        sum_pats.l += int(x.lose_p)
+        if x.sv > 0:
+          print("sv for pitcher is " + str(x.sv))
+        sum_pats.s += int(x.sv)
         sum_pats.sb += int(x.sb)
         sum_pats.cs += int(x.cs)
-        sum_pats.bs += int(x.bs)
         if round(float(sum_pats.ip)%1,3) == 0.1:
             sum_pats.ip -= .1
             ip_chunks += 1

@@ -24,6 +24,7 @@ def init_player_stats(stats: dict, player_id: str, year: int, team: Team, b_orde
       "year": year,
       "team": team,
       "bOrder": b_order,
+      "pitcher_id": "",
       "gp": 1, "gs": 0, "gpdh": 0, "r": 0,
       "lpa": 0, "lab": 0, "lb1": 0, "lb2": 0, "lb3": 0,
       "lhr": 0, "lrbi": 0, "lbb": 0, "lso": 0, "lnump": 0,
@@ -94,6 +95,7 @@ def process_pa_csv(db: Session, file_path: str):
         init_player_stats(game_stats, batter, year, team, b_order)
         s = game_stats[batter]
 
+        s["pitcher_id"] = pitcher
         # s["r"] += parse_int_or_zero(raw["runs"])
         # print("game batter is " + curr_game + " " + batter + " " + raw["run1"])
         for player in [raw["run1"], raw["run2"], raw["run3"], raw["run_b"]]:

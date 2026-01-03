@@ -10,6 +10,7 @@ class BatterDailyStats(Base):
 
     Id = Column(Integer, primary_key=True)
     playerId = Column(String, ForeignKey("players.pid"), nullable=False)
+    oppPitcherId = Column(String, ForeignKey("players.pid"), nullable=False)
     gameId = Column(String, ForeignKey("games.gid"), nullable=False)
 
     year = Column(Integer, nullable=False)
@@ -50,10 +51,9 @@ class BatterDailyStats(Base):
     cs = Column(Integer)
     pos = Column(String)
 
-    game = relationship("Game")
-
     game = relationship("Game", back_populates="batter_daily_stats")
-    player = relationship("Player", back_populates="batter_daily_stats")
+    player = relationship("Player", foreign_keys=[playerId], back_populates="batter_daily_stats")
+    oppPitcher = relationship("Player", foreign_keys=[oppPitcherId], back_populates="batter_daily_stats")
 
     __table_args__ = (
         UniqueConstraint("playerId", "gameId", name="uq_player_game"),

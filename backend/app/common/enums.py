@@ -3,6 +3,7 @@ from enum import Enum
 class Team(Enum):
     ARI = "ARI"
     ATL = "ATL"
+    ATH = "ATH"
     BAL = "BAL"
     BOS = "BOS"
     CHN = "CHN"

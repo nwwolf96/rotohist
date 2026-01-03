@@ -19,6 +19,6 @@ class Player(Base):
     )
     batter_daily_stats = relationship(
         "BatterDailyStats",
-        back_populates="player",
-        cascade="all, delete-orphan",
+        foreign_keys="BatterDailyStats.playerId",
+        back_populates="player"
     )

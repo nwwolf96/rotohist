@@ -1,5 +1,6 @@
-import db_tables.season_pitching as sp
-import db_tables.season_commons as sc
+import app.db_calc.season_pitching as sp
+import app.db_calc.season_commons as sc
+from app.database import SessionLocal
 
 TOTAL_DAYS_SEASON = 186
 ip_min = 10
@@ -24,14 +25,16 @@ POS_ORDER = ["SP","RP"]
 
 NAMES_FROM_FILE = False
 
+db = SessionLocal()
+
 # TODO fix this... this is a bit of a hack, i need to change the db to store the date value that I calculated in commons
 if "10/" in sc.args.to:
     people = sc.get_names_from_file("files/2023_people/pitchers_fmt.out")
-    all_pitcher_ats = sc.load_all_ats(people, min_qualify, sp.loadPitcherStatsFromDb)
+    all_pitcher_ats = sc.load_all_ats(db, people, min_qualify, sp.loadPitcherStatsFromDb)
 else:
     print("from is " + sc.args.fro + " + "  + sc.args.to)
-    people = sc.load_names_from_year(sc.args.fro, sc.args.to, sc.PlayerType.PITCHER)
-    all_pitcher_ats = sc.load_all_ats(people, min_qualify, sp.loadPitcherStatsFromDb)
+    people = sc.load_names_from_year(db, sc.args.fro, sc.args.to, sc.PlayerType.PITCHER)
+    all_pitcher_ats = sc.load_all_ats(db, people, min_qualify, sp.loadPitcherStatsFromDb)
 # full_player_names = get_pitchers()
 # write_pitchers_to_file(full_player_names)
 # full_player_names = playerFileToList("../files/2023_people/pitchers_fmt.out")
