@@ -150,4 +150,5 @@ class RawPlayerRow:
     last: str
     bHand: str
     tHand: str
+    team: str
 

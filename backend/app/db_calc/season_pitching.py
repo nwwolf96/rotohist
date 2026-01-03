@@ -106,10 +106,8 @@ def loadPitcherStatsFromDb(db, player_name, min_qualify=3):
     tmp_hand = ""
     tmp_team = ""
     for x in filter_result:
-        team = x.gameId[0:3]
+        tmp_team = x.player.team
         tmp_hand = str(x.player.bHand).split("Handedness.")[1]
-        if "2024" in x.gameId:
-            tmp_team = team
         curr_date = season_commons.dateToNumber(x.gameId[3:])
         if season_commons.dateToNumber(season_commons.args.to) < curr_date or season_commons.dateToNumber(season_commons.args.fro) > curr_date:
             continue
@@ -119,7 +117,7 @@ def loadPitcherStatsFromDb(db, player_name, min_qualify=3):
         sum_pats.gs += int(x.gs)
         sum_pats.gp += 1
         sum_pats.ip += float(x.outs/3)
-        sum_pats.ha += int(x.singles + x.doubles + x.triples + x.hr)
+        sum_pats.ha += int(x.ha + x.doubles + x.triples + x.hr)
         sum_pats.r += int(x.r)
         sum_pats.er += int(x.er)
         sum_pats.hr += int(x.hr)
@@ -127,8 +125,6 @@ def loadPitcherStatsFromDb(db, player_name, min_qualify=3):
         sum_pats.k += int(x.k)
         sum_pats.w += int(x.win_p)
         sum_pats.l += int(x.lose_p)
-        if x.sv > 0:
-          print("sv for pitcher is " + str(x.sv))
         sum_pats.s += int(x.sv)
         sum_pats.sb += int(x.sb)
         sum_pats.cs += int(x.cs)
@@ -139,8 +135,8 @@ def loadPitcherStatsFromDb(db, player_name, min_qualify=3):
             sum_pats.ip -= .2
             ip_chunks += 2
 
-    if sum_pats.np > 0:
-        sum_pats.era, sum_pats.whip = season_commons.calc_era_whip(sum_pats.ip, ip_chunks, sum_pats.er, sum_pats.bb, sum_pats.ha)
+    # if sum_pats.np > 0:
+    sum_pats.era, sum_pats.whip = season_commons.calc_era_whip(sum_pats.ip, ip_chunks, sum_pats.er, sum_pats.bb, sum_pats.ha)
     whole_ip = sum_pats.ip + .333333 * ip_chunks
     sum_pats.ip = whole_ip
     if (sum_pats.ip > 0.0):

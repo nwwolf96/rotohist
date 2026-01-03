@@ -52,6 +52,7 @@ def query_bs_db(db: Session, name: str, startDate: str = "", endDate: str = ""):
     total_pa = total_ab = total_hr = total_h = total_b1 = total_b2 = total_b3 = total_rbi = total_r = total_hbp = total_sf = 0
     total_bb = total_so = total_nump = 0
     total_sb = total_cs = 0
+    total_pos = ""
 
     for s in stats:
         total_pa += (s.lpa or 0) + (s.rpa or 0)
@@ -73,6 +74,8 @@ def query_bs_db(db: Session, name: str, startDate: str = "", endDate: str = ""):
         total_nump += (s.lnump or 0) + (s.rnump or 0)
         total_sb += (s.sb or 0)
         total_cs += (s.cs or 0)
+        if s.pos not in total_pos:
+            total_pos += s.pos
 
     # Calculate derived stats
     avg = total_h / total_ab if total_ab else 0
@@ -82,7 +85,9 @@ def query_bs_db(db: Session, name: str, startDate: str = "", endDate: str = ""):
 
     # Print summary
     print(f"Player: {first} {last}")
+    print(f"Team: {player.team} ")
     print(f"Games: {len(stats)}")
+    print(f"pos: {total_pos}")
     print(f"PA: {total_pa}, AB: {total_ab}, H: {total_h}, R: {total_r}, HR: {total_hr}, RBI: {total_rbi}, BB: {total_bb}, SO: {total_so}")
     print(f"SB: {total_sb}, CS: {total_cs}")
     print(f"AVG: {avg:.3f}, OBP: {obp:.3f}, SLG: {slg:.3f}, OPS: {ops:.3f}")

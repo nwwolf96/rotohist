@@ -62,23 +62,25 @@ def process_csv(file_path: str, db: Session):
           if seq == 1:
             record.gs = gs
         else:
-          stats = {
-            "year": int(gid[3:7]),
-            "team": team,
-            "bOrder": 0,
-            "gp": 1, "gs": 0, "gpdh": 0, "r": 0,
-            "lpa": 0, "lab": 0, "lb1": 0, "lb2": 0, "lb3": 0,
-            "lhr": 0, "lrbi": 0, "lbb": 0, "lso": 0, "lnump": 0,
-            "lhbp": 0, "lsf": 0, "rpa": 0, "rab": 0, "rb1": 0, "rb2": 0,"rb3": 0, "rhr": 0, "rrbi": 0, "rbb": 0, "rso": 0, 
-            "rnump": 0, "rhbp": 0, "rsf": 0, "sb": 0, "cs": 0, "pos": "",
-          }
-          record = BatterDailyStats(
-            playerId=pid,
-            gameId=gid,
-            **stats,
-          )
-          db.add(record)
-          print("Adding event that wasn't recorded")
+          #TODO make the oppPitcher not nullable so i can actually get these stats into the db. I want fielding REPLACEMENTS
+          ###TODOISLAND
+          # stats = {
+          #   "year": int(gid[3:7]),
+          #   "team": team,
+          #   "bOrder": 0,
+          #   "gp": 1, "gs": 0, "gpdh": 0, "r": 0,
+          #   "lpa": 0, "lab": 0, "lb1": 0, "lb2": 0, "lb3": 0,
+          #   "lhr": 0, "lrbi": 0, "lbb": 0, "lso": 0, "lnump": 0,
+          #   "lhbp": 0, "lsf": 0, "rpa": 0, "rab": 0, "rb1": 0, "rb2": 0,"rb3": 0, "rhr": 0, "rrbi": 0, "rbb": 0, "rso": 0, 
+          #   "rnump": 0, "rhbp": 0, "rsf": 0, "sb": 0, "cs": 0, "pos": "",
+          # }
+          # record = BatterDailyStats(
+          #   playerId=pid,
+          #   gameId=gid,
+          #   **stats,
+          # )
+          # db.add(record)
+          print("skipping event that wasn't recorded")
 
         db.commit()
         print(f"Processing player: {gid} - {pid}")

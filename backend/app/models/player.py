@@ -11,6 +11,7 @@ class Player(Base):
     last = Column(String, nullable=False)
     bHand = Column(Enum(Handedness), nullable=False)
     tHand = Column(Enum(Handedness), nullable=False)
+    team = Column(String, nullable=False)
 
     pitcher_daily_stats = relationship(
         "PitcherDailyStats",

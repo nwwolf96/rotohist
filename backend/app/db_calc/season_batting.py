@@ -128,10 +128,9 @@ def loadBatterStatsFromDb(db, player_name, min_qualify):
     tmp_team = ""
     start_stats = PlayerStarts()
     for x in filter_result:
-        team = x.gameId[0:3]
+        team = x.player.team
         tmp_hand = str(x.player.bHand).split("Handedness.")[1]
-        if "2024" in x.gameId:
-            tmp_team = team
+        tmp_team = team
         # if season_commons.args.month != 0 and x.statDate.split("/")[0] != str(season_commons.args.month):
         #     continue
         curr_date = season_commons.dateToNumber(x.gameId[3:])

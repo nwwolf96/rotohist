@@ -9,6 +9,7 @@ def create_player(
     last: str,
     bHand: Handedness,
     tHand: Handedness,
+    team: str,
 ) -> Player:
     """
     Insert a new player or update existing player based on pid.
@@ -21,6 +22,7 @@ def create_player(
         player.last = last
         player.bHand = bHand
         player.tHand = tHand
+        player.team = player.team + team
     else:
         # Create new player
         player = Player(
@@ -29,6 +31,7 @@ def create_player(
             last=last,
             bHand=bHand,
             tHand=tHand,
+            team=team,
         )
         db.add(player)
     

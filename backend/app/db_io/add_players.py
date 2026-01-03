@@ -34,8 +34,11 @@ def process_csv(file_path: str):
                     first=row.get("first", ""),
                     bHand=row.get("bat", ""),
                     tHand=row.get("throw", ""),
+                    team=row.get("team", ""),
                 )
 
+                if filtered.team in ("NLS", "ALS"):
+                    continue
                 bat_hand = parse_hand(filtered.bHand)
                 throw_hand = parse_hand(filtered.tHand)
 
@@ -49,6 +52,7 @@ def process_csv(file_path: str):
                     last=filtered.last,
                     bHand=bat_hand,
                     tHand=throw_hand,
+                    team=filtered.team + ",",
                 )
 
             except Exception as e:

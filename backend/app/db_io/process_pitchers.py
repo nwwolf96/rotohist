@@ -38,7 +38,7 @@ def process_pitchers(db: Session, file_path: str):
           elif raw["vishome"] == "h":
             starters[gid]["spHome"] = pid
 
-        upsert_player(db, pid)
+        # upsert_player(db, pid)
 
         stats = PitcherDailyStats(
           gameId=gid,
