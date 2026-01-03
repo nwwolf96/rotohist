@@ -53,8 +53,11 @@ def query_bs_db(db: Session, name: str, startDate: str = "", endDate: str = ""):
     total_bb = total_so = total_nump = 0
     total_sb = total_cs = 0
     total_pos = ""
+    total_pos_lf = 0
 
     for s in stats:
+        if "LF" in s.pos:
+            total_pos_lf += 1
         total_pa += (s.lpa or 0) + (s.rpa or 0)
         total_ab += (s.lab or 0) + (s.rab or 0)
         total_hr += (s.lhr or 0) + (s.rhr or 0)
@@ -88,6 +91,7 @@ def query_bs_db(db: Session, name: str, startDate: str = "", endDate: str = ""):
     print(f"Team: {player.team} ")
     print(f"Games: {len(stats)}")
     print(f"pos: {total_pos}")
+    print(f"pos: {total_pos_lf}")
     print(f"PA: {total_pa}, AB: {total_ab}, H: {total_h}, R: {total_r}, HR: {total_hr}, RBI: {total_rbi}, BB: {total_bb}, SO: {total_so}")
     print(f"SB: {total_sb}, CS: {total_cs}")
     print(f"AVG: {avg:.3f}, OBP: {obp:.3f}, SLG: {slg:.3f}, OPS: {ops:.3f}")

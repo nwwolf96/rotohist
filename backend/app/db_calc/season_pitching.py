@@ -114,7 +114,7 @@ def loadPitcherStatsFromDb(db, player_name, min_qualify=3):
                 tmp_team += team
             if team not in tmp_team:
                 tmp_team += ", " + team 
-        tmp_hand = str(x.player.bHand).split("Handedness.")[1]
+        tmp_hand = str(x.player.tHand).split("Handedness.")[1]
         curr_date = season_commons.dateToNumber(x.gameId[3:])
         if season_commons.dateToNumber(season_commons.args.to) < curr_date or season_commons.dateToNumber(season_commons.args.fro) > curr_date:
             continue
