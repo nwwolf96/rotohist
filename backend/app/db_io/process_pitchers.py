@@ -40,6 +40,10 @@ def process_pitchers(db: Session, file_path: str):
 
         # upsert_player(db, pid)
 
+        tmp_gs = int(raw["p_gs"] == "1")
+        tmp_outs = parse_int_or_zero(raw["p_ipouts"])
+        tmp_er = parse_int_or_zero(raw["p_er"])
+        quality_start = int(tmp_gs == 1 and tmp_outs >= 18 and tmp_er <= 3)
         stats = PitcherDailyStats(
           gameId=gid,
           playerId=pid,
@@ -72,6 +76,7 @@ def process_pitchers(db: Session, file_path: str):
           gs=int(raw["p_gs"] == "1"),
           gf=parse_int_or_zero(raw["p_gf"]),
           cg=parse_int_or_zero(raw["p_cg"]),
+          qs=quality_start,
           visHome=raw["vishome"],
         )
 

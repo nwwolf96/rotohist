@@ -7,6 +7,7 @@ ab_min = 25
 min_qualify = 20
 
 total_days = sc.dateToNumber(sc.args.to)-sc.dateToNumber(sc.args.fro)
+year = str(sc.args.to)[0:4]
 if total_days > TOTAL_DAYS_SEASON:
     total_days = TOTAL_DAYS_SEASON
 
@@ -60,7 +61,7 @@ roto_stats.avg.sd = hoa_sd
 
 _,_,_,_,_,bucket_mins, dollar_per_unit = sb.sample_players(player_list, all_player_ats, league_ba, print_players=False, eval_prv=True, ab_min=int(ab_min), roto_stats=roto_stats)
 
-sb.sample_players(people, all_player_ats, league_ba, print_players=True, eval_prv=True, ab_min=int(ab_min), roto_stats=roto_stats, apply_to_all=True, bucket_mins=bucket_mins, dollar_per_unit=dollar_per_unit, to_csv=True, db=db)
+sb.sample_players(people, all_player_ats, league_ba, print_players=True, eval_prv=True, ab_min=int(ab_min), roto_stats=roto_stats, apply_to_all=True, bucket_mins=bucket_mins, dollar_per_unit=dollar_per_unit, to_csv=True, db=db, batter_year=year)
 
-
-# load_to_db(all_player_ats)
+# print("LOADING DB")
+# sb.load_to_db(db, all_player_ats, year)

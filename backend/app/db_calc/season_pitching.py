@@ -19,6 +19,7 @@ pitching_header_season = [
     "HR", 
     "BB", 
     "K", 
+    "QS", 
     "W", 
     "L", 
     "S", 
@@ -76,6 +77,7 @@ class PitcherAt:
     hr = 0
     bb = 0
     k = 0
+    qs = 0
     w = 0
     l = 0
     s = 0
@@ -95,7 +97,7 @@ class PitcherAt:
       return str(self.name + " " + str(self.ip) + " " + str(self.w) + " " + str(self.k))
 
 def getArrayFromPats(pats):
-    ret_val = [pats.name, pats.team, pats.hand, pats.pos, pats.ip, pats.gs, pats.gp, pats.ha, pats.r, pats.er, pats.hr, pats.bb, pats.k, pats.w, pats.l, pats.s, pats.hd, pats.bs, pats.era, pats.whip, pats.sb, pats.cs, pats.sbp] # TODO add these back in if care, pats.np, pats.strike, pats.ball]
+    ret_val = [pats.name, pats.team, pats.hand, pats.pos, pats.ip, pats.gs, pats.gp, pats.ha, pats.r, pats.er, pats.hr, pats.bb, pats.k, pats.qs, pats.w, pats.l, pats.s, pats.hd, pats.bs, pats.era, pats.whip, pats.sb, pats.cs, pats.sbp] # TODO add these back in if care, pats.np, pats.strike, pats.ball]
     return ret_val
 
 def loadPitcherStatsFromDb(db, player_name, min_qualify=3):
@@ -124,12 +126,13 @@ def loadPitcherStatsFromDb(db, player_name, min_qualify=3):
         sum_pats.gs += int(x.gs)
         sum_pats.gp += 1
         sum_pats.ip += float(x.outs/3)
-        sum_pats.ha += int(x.ha + x.doubles + x.triples + x.hr)
+        sum_pats.ha += int(x.ha)
         sum_pats.r += int(x.r)
         sum_pats.er += int(x.er)
         sum_pats.hr += int(x.hr)
         sum_pats.bb += int(x.bb)
         sum_pats.k += int(x.k)
+        sum_pats.qs += int(x.qs)
         sum_pats.w += int(x.win_p)
         sum_pats.l += int(x.lose_p)
         sum_pats.s += int(x.sv)

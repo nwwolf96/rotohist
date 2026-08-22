@@ -55,6 +55,7 @@ class PitcherDailyStats(Base):
     gs = Column(Integer, default=0)
     gf = Column(Integer, default=0)
     cg = Column(Integer, default=0)
+    qs = Column(Integer, default=0)
 
     visHome = Column(String, nullable=False)
 
